@@ -3,13 +3,13 @@ from datetime import datetime
 
 @dataclass
 class User:
-    id: int | None
-    first_name: str
-    surname: str | None
-    username: str | None
-    password_hash: str | None
-    insert_datetime: datetime | None
-    is_active: bool | None
+    id: int | None = None
+    first_name: str | None = None
+    surname: str | None = None
+    username: str | None = None
+    password_hash: str | None = None
+    insert_datetime: datetime | None = None
+    is_active: bool | None = None
     @classmethod
     def from_row(cls, row):
         return cls(
@@ -24,12 +24,12 @@ class User:
 
 @dataclass
 class File:
-    id: int | None
-    user_id: int | None
-    file_path: str | None
-    file_extension: str | None
-    description: str | None
-    insert_datetime: datetime | None
+    id: int | None = None
+    user_id: int | None = None
+    file_path: str | None = None
+    file_extension: str | None = None
+    description: str | None = None
+    insert_datetime: datetime | None = None
     @classmethod
     def from_row(cls, row):
         return cls(
@@ -43,12 +43,12 @@ class File:
 
 @dataclass
 class Token:
-    id: int | None
-    user_id: int | None
-    expiration_date: datetime | None
-    is_active: bool | None
-    value: str | None
-    insert_datetime: datetime | None
+    id: int | None = None
+    user_id: int | None = None
+    expiration_date: datetime | None = None
+    is_active: bool | None = None
+    value: str | None = None
+    insert_datetime: datetime | None = None
     @classmethod
     def from_row(cls, row):
         return cls(

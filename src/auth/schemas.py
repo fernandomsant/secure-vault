@@ -1,12 +1,12 @@
 import string
 from pydantic import BaseModel, Field, field_validator
 from typing import Optional, Annotated
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import Enum
 
 class RegisterRequest(BaseModel):
     full_name: str
-    username: str = Field(..., min_length=5, max_length=50,regex="^[a-zA-Z0-9_]+$")
+    username: str = Field(..., min_length=5, max_length=50,pattern="^[a-zA-Z0-9_]+$")
     password: Annotated[str, Field(..., min_length=8, max_length=128)]
     
     @field_validator('password')
@@ -24,7 +24,6 @@ class RegisterRequest(BaseModel):
 class TokenRequest(BaseModel):
     username: str
     password: str
-    activation_date: datetime | None = datetime.today()
-    expiration_date: datetime
-    is_canceled: bool
-    value: str
+    expiration_date: datetime | None = datetime.today() + timedelta(minutes=30)
+    is_active: bool = True
+    value: str | None = None

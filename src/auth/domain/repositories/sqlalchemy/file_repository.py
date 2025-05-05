@@ -5,11 +5,8 @@ from auth.domain.models import File
 from auth.domain.repositories.base_repositories import BaseFileRepository
 
 class FileRepository(BaseFileRepository):
-    def __init__(self, session: Session):
-        self._session = session
-
-    def get_by_id(self, id: int) -> Optional[File]:
-        result = self._session.execute(
+    def get_by_id(self, session: Session, id: int) -> Optional[File]:
+        result = session.execute(
             text("""
                  SELECT
                  file_file_path,
@@ -24,8 +21,8 @@ class FileRepository(BaseFileRepository):
         db_obj = result.mappings().first()
         return File.from_row(db_obj) if db_obj else None
     
-    def get_by_file_path(self, file_path: str, user_id: int) -> Optional[File]:
-        result = self._session.execute(
+    def get_by_file_path(self, session: Session, file_path: str, user_id: int) -> Optional[File]:
+        result = session.execute(
             text("""
                  SELECT
                  file_file_path,
@@ -42,8 +39,8 @@ class FileRepository(BaseFileRepository):
         db_obj = result.mappings().first()
         return File.from_row(db_obj) if db_obj else None
     
-    def add(self, file: File) -> None:
-        self._session.execute(
+    def add(self, session: Session, file: File) -> None:
+        session.execute(
             text("""
                  INSERT INTO files (
                  file_user_id
@@ -63,8 +60,8 @@ class FileRepository(BaseFileRepository):
             }
         )
     
-    def update(self, file: File) -> None:
-        self._session.execute(
+    def update(self, session: Session, file: File) -> None:
+        session.execute(
             text("""
                  UPDATE files
                  SET
@@ -82,8 +79,28 @@ class FileRepository(BaseFileRepository):
             }
         )
     
-    def delete(self, id: int) -> None:
-        pass
+    def delete(self, session: Session, id: int) -> None:
+        session.execute(
+            text("""
+                DELETE FROM files
+                WHERE file_id = :id"""),
+                {
+                    "id": id
+                }
+        )
     
-    def list_by_user_id(self, user_id) -> List[File]:
-        pass
+    def list_by_user_id(self, session: Session, user_id) -> List[File]:
+        result = session.execute(
+            text("""
+                SELECT
+                file_file_path
+               ,file_file_extension
+               ,file_description
+                FROM files
+                WHERE file_user_id = :user_id"""),
+               {
+                   "user_id": user_id
+               }
+        )
+        db_obj = result.mappings().first()
+        return [File.from_row(db_obj_item) for db_obj_item in db_obj] if db_obj else None

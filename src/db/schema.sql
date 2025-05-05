@@ -1,27 +1,27 @@
 CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY,
-    user_first_name VARCHAR(50) NOT NULL,
-    user_surname VARCHAR(50),
-    user_username VARCHAR(50) UNIQUE NOT NULL,
-    user_password_hash VARCHAR(200) NOT NULL,
-    user_insert_datetime DATETIME NOT NULL DEFAULT GETDATE(),
-    user_is_active BOOLEAN NOT NULL DEFAULT true,
-)
+    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_first_name TEXT NOT NULL,
+    user_surname TEXT,
+    user_username TEXT UNIQUE NOT NULL,
+    user_password_hash TEXT NOT NULL,
+    user_is_active BOOLEAN NOT NULL DEFAULT 1
+    user_insert_datetime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+);
 
 CREATE TABLE files (
-    file_id SERIAL PRIMARY KEY,
+    file_id INTEGER PRIMARY KEY AUTOINCREMENT,
     file_user_id INTEGER NOT NULL,
-    file_file_path VARCHAR (100) NOT NULL,
-    file_file_extension VARCHAR(10) NOT NULL,
-    file_description VARCHAR (100),
-    file_insert_datetime DATETIME NOT NULL DEFAULT GETDATE(),
-)
+    file_file_path TEXT NOT NULL,
+    file_file_extension TEXT NOT NULL,
+    file_description TEXT,
+    file_insert_datetime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
 CREATE TABLE tokens (
-    token_id SERIAL PRIMARY KEY,
+    token_id INTEGER PRIMARY KEY AUTOINCREMENT,
     token_user_id INTEGER NOT NULL,
     token_expiration_date DATETIME NOT NULL,
-    token_is_active BOOLEAN NOT NULL DEFAULT true,
-    token_value VARCHAR(100) NOT NULL,
-    token_insert_datetime DATETIME, NOT NULL DEFAULT GETDATE()
-)
+    token_is_active BOOLEAN NOT NULL DEFAULT 1,
+    token_value TEXT NOT NULL,
+    token_insert_datetime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

@@ -4,12 +4,9 @@ from typing import Optional
 from auth.domain.models import User
 from auth.domain.repositories.base_repositories import BaseUserRepository
 
-class UserRepository(BaseUserRepository):
-    def __init__(self, session: Session):
-        self._session = session
-    
-    def get_by_id(self, id: int) -> Optional[User]:
-        result = self._session.execute(
+class UserRepository(BaseUserRepository):    
+    def get_by_id(self, session: Session, id: int) -> Optional[User]:
+        result = session.execute(
             text("""
                  SELECT
                  user_first_name
@@ -22,13 +19,15 @@ class UserRepository(BaseUserRepository):
         db_obj = result.mappings().first()
         return User.from_row(db_obj) if db_obj else None
     
-    def get_by_username(self, username: str) -> Optional[User]:
-        result = self._session.execute(
+    def get_by_username(self, session: Session, username: str) -> Optional[User]:
+        result = session.execute(
             text("""
                  SELECT
                  user_first_name
                 ,user_surname
                 ,user_username
+                ,user_is_active
+                ,user_insert_datetime
                  FROM users
                  WHERE user_username = :username"""),
             {"username": username}
@@ -36,19 +35,37 @@ class UserRepository(BaseUserRepository):
         db_obj = result.mappings().first()
         return User.from_row(db_obj) if db_obj else None
     
-    def add(self, user: User) -> None:
-        self._session.execute(
+    def get_by_username_and_password_hash(self, session: Session, username: str, password_hash: str) -> Optional[User]:
+        result = session.execute(
             text("""
-                INSERT INTO users (
+                SELECT
                  user_first_name
                 ,user_surname
                 ,user_username
-                ,user_password_hash)
+                FROM users
+                WHERE user_username = :username
+                AND user_password_hash = :password_hash"""),
+                {
+                    "username": username,
+                    "password_hash": password_hash
+                 }
+        )
+        db_obj = result.mappings().first()
+        return User.from_row(db_obj) if db_obj else None
+    
+    def add(self, session: Session, user: User) -> None:
+        session.execute(
+            text("""
+                INSERT INTO users (
+                user_first_name
+               ,user_surname
+               ,user_username
+               ,user_password_hash)
                 VALUES (
-                :first_name
-               ,:surname
-               ,:username
-               ,:password_hash)
+               :first_name
+              ,:surname
+              ,:username
+              ,:password_hash)
             """),
             {
                 "first_name": user.first_name,
@@ -58,8 +75,8 @@ class UserRepository(BaseUserRepository):
             }
         )
     
-    def update_profile(self, user: User) -> None:
-        self._session.execute(
+    def update_profile(self, session: Session, user: User) -> None:
+        session.execute(
             text("""
                 UPDATE users 
                 SET
@@ -78,8 +95,8 @@ class UserRepository(BaseUserRepository):
             }
         )
     
-    def update_password(self, user: User) -> None:
-        self._session.execute(
+    def update_password(self, session: Session, user: User) -> None:
+        session.execute(
             text("""
                 UPDATE users 
                 SET user_password_hash = :password_hash
@@ -91,8 +108,8 @@ class UserRepository(BaseUserRepository):
             }
         )
         
-    def deactivate_user(self, id) -> None:
-        self._session.execute(
+    def deactivate_user(self, session: Session, id) -> None:
+        session.execute(
             text("""
                     UPDATE users
                     SET user_is_active = false
