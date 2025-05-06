@@ -38,7 +38,7 @@ async def register(register_request: RegisterRequest,
     return user
 
 
-@router.post("/token")
+@router.post("/gettoken")
 async def request_token(token_request: TokenRequest,
                         user_service: UserService = Depends(get_user_service)):
     username = token_request.username
