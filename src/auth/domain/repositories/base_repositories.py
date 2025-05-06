@@ -13,7 +13,7 @@ class BaseUserRepository(ABC):
         pass
 
     @abstractmethod
-    def get_by_username_and_password_hash(self, session, username: str, password_hash: str) -> Optional[User]:
+    def get_password_hash_by_username(self, session, username: str) -> Optional[User]:
         pass
     
     @abstractmethod

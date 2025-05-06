@@ -6,7 +6,7 @@ from enum import Enum
 
 class RegisterRequest(BaseModel):
     full_name: str
-    username: str = Field(..., min_length=5, max_length=50,pattern="^[a-zA-Z0-9_]+$")
+    username: str = Field(..., min_length=5, max_length=25,pattern="^[a-zA-Z0-9_\.]+$")
     password: Annotated[str, Field(..., min_length=8, max_length=128)]
     
     @field_validator('password')
@@ -25,5 +25,3 @@ class TokenRequest(BaseModel):
     username: str
     password: str
     expiration_date: datetime | None = datetime.today() + timedelta(minutes=30)
-    is_active: bool = True
-    value: str | None = None

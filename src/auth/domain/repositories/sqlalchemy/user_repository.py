@@ -35,19 +35,15 @@ class UserRepository(BaseUserRepository):
         db_obj = result.mappings().first()
         return User.from_row(db_obj) if db_obj else None
     
-    def get_by_username_and_password_hash(self, session: Session, username: str, password_hash: str) -> Optional[User]:
+    def get_password_hash_by_username(self, session: Session, username: str) -> Optional[User]:
         result = session.execute(
             text("""
                 SELECT
-                 user_first_name
-                ,user_surname
-                ,user_username
+                 user_password_hash
                 FROM users
-                WHERE user_username = :username
-                AND user_password_hash = :password_hash"""),
+                WHERE user_username = :username"""),
                 {
                     "username": username,
-                    "password_hash": password_hash
                  }
         )
         db_obj = result.mappings().first()
