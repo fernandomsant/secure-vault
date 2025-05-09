@@ -20,8 +20,11 @@ class UserService:
                 username=username,
                 password_hash=password_hash
             )
-            self._repo.add(session, new_user)
-            
+            try:
+                self._repo.add(session, new_user)
+            except Exception:
+                raise(HTTPException(status_code=500, detail="It was not possible to handle your request"))
+
             session.commit()
             new_user_db = self._repo.get_by_username(session, username)
             return new_user_db
@@ -38,3 +41,10 @@ class UserService:
                 raise HTTPException(status_code=401, detail="Invalid username or password")
             
             return True
+    
+    def get_user_by_username(self, username) -> User:
+        with self.session_maker() as session:
+            user: User = self._repo.get_by_username(session, username)
+            if not user:
+                raise HTTPException(status_code=404, detail="User not found")
+            return user

@@ -1,15 +1,25 @@
-import sqlite3
+from sqlalchemy import create_engine, text
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-DB_PATH = "..\\app.db"
-SCHEMA_PATH = ".\db\schema.sql"
+DB_URL = os.getenv("DATABASE_URL")
+SCHEMA_PATH = "./db/schema-mssql.sql"
 
 def initialize_database():
-    conn = sqlite3.connect(DB_PATH)
+    engine = create_engine(DB_URL, future=True)
 
-    schema_sql = ""
     with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
         schema_sql = f.read()
+
     print(schema_sql)
-    with conn:
-        conn.executescript(schema_sql)
-initialize_database()
+
+    with engine.begin() as connection:
+        for statement in schema_sql.strip().split(";"):
+            stmt = statement.strip()
+            if stmt:
+                connection.execute(text(stmt))
+
+if __name__ == "__main__":
+    initialize_database()
+

@@ -71,9 +71,13 @@ class BaseTokenRepository(ABC):
         pass
     
     @abstractmethod
-    def list_by_user_id(self, session, user_id) -> List[Token]:
+    def list_by_user_id(self, session, user_id: int) -> List[Token]:
         pass
 
     @abstractmethod
-    def list_active_by_user_id(self, session, user_id) -> List[Token]:
+    def list_active_by_user_id(self, session, user_id: int) -> List[Token]:
+        pass
+
+    @abstractmethod
+    def deactivate_token(self, session, token_id: int) -> None:
         pass

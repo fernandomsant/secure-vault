@@ -9,6 +9,7 @@ class UserRepository(BaseUserRepository):
         result = session.execute(
             text("""
                 SELECT
+                    user_id,
                     user_first_name,
                     user_surname,
                     user_username
@@ -24,6 +25,7 @@ class UserRepository(BaseUserRepository):
         result = session.execute(
             text("""
                 SELECT
+                    user_id,
                     user_first_name,
                     user_surname,
                     user_username,

@@ -50,10 +50,11 @@ class TokenRepository(BaseTokenRepository):
             {"id": id}
         )
     
-    def list_by_user_id(self, session: Session, user_id) -> List[Token]:
+    def list_by_user_id(self, session: Session, user_id: int) -> List[Token]:
         result = session.execute(
             text("""
                 SELECT
+                    token_id,
                     token_user_id,
                     token_expiration_date,
                     token_is_active,
@@ -70,6 +71,7 @@ class TokenRepository(BaseTokenRepository):
         result = session.execute(
             text("""
                 SELECT
+                    token_id,
                     token_user_id,
                     token_expiration_date,
                     token_is_active,
@@ -77,9 +79,18 @@ class TokenRepository(BaseTokenRepository):
                 FROM tokens
                 WHERE
                     token_user_id = :user_id
-                AND token_is_active = true
+                AND token_is_active = 1
             """),
             {"user_id": user_id}
         )
-        db_obj = result.mappings().first()
-        return [Token.from_row(db_obj_item) for db_obj_item in db_obj] if db_obj else None
+        db_obj = result.mappings().all()
+        return [Token.from_row(db_obj_item) for db_obj_item in db_obj]
+    
+    def deactivate_token(self, session, id: int):
+        session.execute(
+            text("""
+                UPDATE tokens
+                SET token_is_active = 0
+                WHERE token_id = :id
+            """),
+            {"id": id})
