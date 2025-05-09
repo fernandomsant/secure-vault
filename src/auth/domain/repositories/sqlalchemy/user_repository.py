@@ -8,12 +8,13 @@ class UserRepository(BaseUserRepository):
     def get_by_id(self, session: Session, id: int) -> Optional[User]:
         result = session.execute(
             text("""
-                 SELECT
-                 user_first_name
-                ,user_surname
-                ,user_username
-                 FROM users
-                 WHERE user_id = :id"""),
+                SELECT
+                    user_first_name,
+                    user_surname,
+                    user_username
+                FROM users
+                WHERE user_id = :id
+            """),
             {"id": id}
         )
         db_obj = result.mappings().first()
@@ -22,14 +23,15 @@ class UserRepository(BaseUserRepository):
     def get_by_username(self, session: Session, username: str) -> Optional[User]:
         result = session.execute(
             text("""
-                 SELECT
-                 user_first_name
-                ,user_surname
-                ,user_username
-                ,user_is_active
-                ,user_insert_datetime
-                 FROM users
-                 WHERE user_username = :username"""),
+                SELECT
+                    user_first_name,
+                    user_surname,
+                    user_username,
+                    user_is_active,
+                    user_insert_datetime
+                FROM users
+                WHERE user_username = :username
+            """),
             {"username": username}
         )
         db_obj = result.mappings().first()
@@ -39,12 +41,11 @@ class UserRepository(BaseUserRepository):
         result = session.execute(
             text("""
                 SELECT
-                 user_password_hash
+                    user_password_hash
                 FROM users
-                WHERE user_username = :username"""),
-                {
-                    "username": username,
-                 }
+                WHERE user_username = :username
+            """),
+            {"username": username}
         )
         db_obj = result.mappings().first()
         return User.from_row(db_obj) if db_obj else None
@@ -53,15 +54,15 @@ class UserRepository(BaseUserRepository):
         session.execute(
             text("""
                 INSERT INTO users (
-                user_first_name
-               ,user_surname
-               ,user_username
-               ,user_password_hash)
+                    user_first_name,
+                    user_surname,
+                    user_username,
+                    user_password_hash)
                 VALUES (
-               :first_name
-              ,:surname
-              ,:username
-              ,:password_hash)
+                    :first_name,
+                    :surname,
+                    :username,
+                    :password_hash)
             """),
             {
                 "first_name": user.first_name,
@@ -76,10 +77,10 @@ class UserRepository(BaseUserRepository):
             text("""
                 UPDATE users 
                 SET
-                user_first_name = :first_name
-               ,user_surname = :surname
-               ,user_username = :username
-               ,user_is_active = :is_active
+                    user_first_name = :first_name
+                    user_surname = :surname
+                    user_username = :username
+                    user_is_active = :is_active
                 WHERE user_id = :id
             """),
             {
@@ -107,11 +108,9 @@ class UserRepository(BaseUserRepository):
     def deactivate_user(self, session: Session, id) -> None:
         session.execute(
             text("""
-                    UPDATE users
-                    SET user_is_active = false
-                    WHERE user_id = :id
-                    """),
-            {
-                "id": id
-            }
+                UPDATE users
+                SET user_is_active = false
+                WHERE user_id = :id
+            """),
+            {"id": id}
         )
