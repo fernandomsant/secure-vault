@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 
-from db.model import File
 from fastapi import UploadFile
 from sqlalchemy.orm import Session
+
+from db.model import File
 
 
 class BaseFileService(ABC):

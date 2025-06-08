@@ -6,10 +6,11 @@ load_dotenv()
 
 from typing import Any
 
-from db.database import Database
 from fastapi import FastAPI, Request
 from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
+
+from db.database import Database
 from file.router import router as file_router
 from token_.router import router as token_router
 from user.router import router as user_router

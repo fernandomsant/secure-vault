@@ -1,6 +1,7 @@
-from db.model import User
 from sqlalchemy import text
 from sqlalchemy.orm import Session
+
+from db.model import User
 from user.repository.base_repository import BaseUserRepository
 
 

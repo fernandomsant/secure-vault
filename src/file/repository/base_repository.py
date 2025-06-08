@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from db.model import File
 from sqlalchemy.orm import Session
+
+from db.model import File
 
 
 class BaseFileRepository(ABC):

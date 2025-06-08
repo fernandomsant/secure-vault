@@ -1,9 +1,10 @@
 from typing import Annotated, Type
 
-from db.dependency import get_db_session
 from fastapi import APIRouter, Depends, Form, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
+
+from db.dependency import get_db_session
 from user.dependency.service import get_user_service
 from user.schema import CreateUser
 from user.service.base_service import BaseUserService

@@ -2,9 +2,10 @@ import secrets
 import string
 from typing import Type
 
-from db.dependency import get_db_session
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+
+from db.dependency import get_db_session
 from token_.dependency.service import get_token_service
 from token_.service.base_service import BaseTokenService
 from user.dependency.service import get_user_service

@@ -3,6 +3,7 @@ import re
 from argon2 import PasswordHasher
 from password_strength import PasswordPolicy
 from sqlalchemy.orm import Session
+
 from user.dependency.repository import get_user_repository
 from user.service.base_service import BaseUserService
 

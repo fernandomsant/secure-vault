@@ -1,7 +1,8 @@
-from db.model import File
-from file.repository.base_repository import BaseFileRepository
 from sqlalchemy import text
 from sqlalchemy.orm import Session
+
+from db.model import File
+from file.repository.base_repository import BaseFileRepository
 
 
 class FileRepository(BaseFileRepository):

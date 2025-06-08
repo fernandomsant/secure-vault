@@ -1,9 +1,10 @@
 import os
 from contextlib import contextmanager
 
-from db.model import Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+from db.model import Base
 
 
 class Database:

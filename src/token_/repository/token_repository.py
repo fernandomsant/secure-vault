@@ -1,6 +1,7 @@
-from db.model import Token
 from sqlalchemy import text
 from sqlalchemy.orm import Session
+
+from db.model import Token
 from token_.repository.base_repository import BaseTokenRepository
 
 

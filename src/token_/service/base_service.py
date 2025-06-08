@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from db.model import Token
 from fastapi import UploadFile
 from sqlalchemy.orm import Session
+
+from db.model import Token
 from token_.repository.base_repository import BaseTokenRepository
 
 
