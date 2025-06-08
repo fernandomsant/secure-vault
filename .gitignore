@@ -1,4 +1,5 @@
-.vs
+secure-vault.txt
+venv/
+**/__pycache__/
 **/.env
-**/__pycache__
-**/app.db
+
