@@ -11,7 +11,7 @@ class FileRepository(BaseFileRepository):
 
     def get_by_id(self, id):
         result = self._session.execute(
-            text("SELECT * FROM files WHERE file_id = :id"), {"id": id}
+            text('SELECT * FROM files WHERE file_id = :id'), {'id': id}
         )
         row = result.mappings().first()
         if row:
@@ -21,9 +21,9 @@ class FileRepository(BaseFileRepository):
     def get_by_file_full_path(self, username, file_path, filename):
         result = self._session.execute(
             text(
-                "SELECT * FROM files AS f INNER JOIN users AS u ON f.file_user_id = u.user_id WHERE f.file_file_path = :file_path AND f.file_filename = :filename AND u.user_username = :username"
+                'SELECT * FROM files AS f INNER JOIN users AS u ON f.file_user_id = u.user_id WHERE f.file_file_path = :file_path AND f.file_filename = :filename AND u.user_username = :username'
             ),
-            {"file_path": file_path, "filename": filename, "username": username},
+            {'file_path': file_path, 'filename': filename, 'username': username},
         )
         row = result.mappings().first()
         if row:
@@ -31,4 +31,14 @@ class FileRepository(BaseFileRepository):
         return None
 
     def create_file(self, username, file_path, filename):
-        pass
+        self._session.execute(
+            text(
+                'INSERT INTO files (file_user_id, file_file_path, file_filename)' \
+                'SELECT u.user_id, :file_path, :filename' \
+                'FROM files AS f' \
+                'INNER JOIN users AS u' \
+                'ON f.file_user_id = u.user_id' \
+                'WHERE u.user_username = :username'
+            ),
+            {'file_path': file_path, 'filename': filename, 'user_username': username}
+        )

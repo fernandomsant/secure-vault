@@ -14,12 +14,12 @@ class BaseFileService(ABC):
 
     @abstractmethod
     def create_file(
-        self, username: str, file_path: str, file_upload: UploadFile
+        self, username: str, user_id: int, file_path: str, file_description: str, file_upload: UploadFile
     ) -> None:
         pass
 
     @abstractmethod
-    def read_file(self, username: str, file_full_path: str) -> None:
+    def read_file(self, username: str, user_id: int, file_full_path: str) -> None:
         pass
 
     @abstractmethod

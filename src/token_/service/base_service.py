@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, List
+from datetime import datetime
 
 from fastapi import UploadFile
 from sqlalchemy.orm import Session
@@ -15,13 +16,17 @@ class BaseTokenService(ABC):
         pass
 
     @abstractmethod
-    def get_token(self, username: str) -> Optional[Token]:
+    def get_tokens(self, username: str) -> Optional[List[Token]]:
         pass
 
     @abstractmethod
-    def create_token(self, username: str, token_value: str):
+    def create_token(self, username: str, token_value: str, timespan: int):
         pass
 
     @abstractmethod
     def validate_token(self, username: str, token: str) -> bool:
+        pass
+
+    @abstractmethod
+    def delete_token(self, username: str, token: str) -> bool:
         pass

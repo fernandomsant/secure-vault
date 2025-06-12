@@ -13,7 +13,7 @@ class Database:
     def initialize(cls, **kwargs):
         cls._engine = create_engine(**kwargs)
         cls._SessionLocal = sessionmaker(bind=cls._engine)
-        if os.getenv("ENV") == "development":
+        if os.getenv('ENV') == 'development':
             Base.metadata.create_all(Database._engine)
 
     @classmethod

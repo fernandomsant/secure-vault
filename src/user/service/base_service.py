@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
+from typing import Optional
+from db.model import User
 
 class BaseUserService(ABC):
 
@@ -15,4 +17,8 @@ class BaseUserService(ABC):
 
     @abstractmethod
     def validate_user(self, username: str, password: str):
+        pass
+
+    @abstractmethod
+    def get_user_by_username(self, username: str) -> Optional[User]:
         pass
