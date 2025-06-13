@@ -42,12 +42,13 @@ class FileService(BaseFileService):
         return
 
     def read_file(self, username, user_id, file_full_path):
-        file_path = os.path.join(str(user_id), file_full_path)
+        file_path = os.path.join('storage', str(user_id), file_full_path)
+        print(file_path)
         if not os.path.exists(file_path):
-            return ValueError('It was not possible to retrieve your file')
+            raise ValueError('It was not possible to retrieve your file')
         decrypt = decrypt_file(file_path, username)
-        file_description = next(decrypt)
-        return file_description, decrypt
+        file_description = str(next(decrypt), encoding='utf-8')
+        return os.path.basename(file_full_path), file_description, decrypt
 
     def update_file(self, username, file_full_path, file_upload):
         return super().update_file(username, file_full_path, file_upload)

@@ -33,12 +33,12 @@ class FileRepository(BaseFileRepository):
     def create_file(self, username, file_path, filename):
         self._session.execute(
             text(
-                'INSERT INTO files (file_user_id, file_file_path, file_filename)' \
-                'SELECT u.user_id, :file_path, :filename' \
-                'FROM files AS f' \
-                'INNER JOIN users AS u' \
-                'ON f.file_user_id = u.user_id' \
-                'WHERE u.user_username = :username'
+                'INSERT INTO files (file_user_id, file_file_path, file_filename) ' \
+                'SELECT u.user_id, :file_path, :filename ' \
+                'FROM files AS f ' \
+                'INNER JOIN users AS u ' \
+                'ON f.file_user_id = u.user_id ' \
+                'WHERE u.user_username = :user_username'
             ),
             {'file_path': file_path, 'filename': filename, 'user_username': username}
         )
