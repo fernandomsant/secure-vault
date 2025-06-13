@@ -22,8 +22,9 @@ python -m venv venv
 pip install -r requirements.txt
 cat src/.example.env > src/.env
 ```
-*Altere o arquivo .env para incluir a variável **DATABASE_URL**
-De preferência, execute em modo de desenvolvimento para visualizar os endpoints com Swagger*
+*Altere o arquivo .env para incluir a variável **DATABASE_URL***
+
+*De preferência, execute em modo de desenvolvimento para visualizar os endpoints com Swagger*
 ```bash
 fastapi dev src/main.py
 # http://127.0.0.1:8000/docs
