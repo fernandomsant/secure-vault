@@ -12,8 +12,8 @@ class UserRepository(BaseUserRepository):
 
     def get_user_by_username(self, username):
         result = self._session.execute(
-            text('SELECT * FROM users WHERE user_username = :username'),
-            {'username': username},
+            text("SELECT * FROM users WHERE user_username = :username"),
+            {"username": username},
         )
         row = result.mappings().first()
         if row:
@@ -23,12 +23,12 @@ class UserRepository(BaseUserRepository):
     def create_user(self, first_name, surname, username, password_hash):
         self._session.execute(
             text(
-                'INSERT INTO users (user_first_name, user_surname, user_username, user_password_hash) VALUES (:first_name, :surname, :username, :password_hash)'
+                "INSERT INTO users (user_first_name, user_surname, user_username, user_password_hash) VALUES (:first_name, :surname, :username, :password_hash)"
             ),
             {
-                'first_name': first_name,
-                'surname': surname,
-                'username': username,
-                'password_hash': password_hash,
+                "first_name": first_name,
+                "surname": surname,
+                "username": username,
+                "password_hash": password_hash,
             },
         )

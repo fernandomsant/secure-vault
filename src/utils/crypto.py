@@ -1,16 +1,24 @@
-from Crypto.Hash import SHA256
-from Crypto.Protocol.KDF import HKDF, scrypt
-from typing import BinaryIO
-from Crypto.Random import get_random_bytes
-from Crypto.Cipher import AES
-import tempfile
 import os
+import tempfile
+from typing import BinaryIO
+
+from Crypto.Cipher import AES
+from Crypto.Protocol.KDF import scrypt
+from Crypto.Random import get_random_bytes
 
 SALT_SIZE = 16
 NONCE_SIZE = 12
 
-def encrypt_file(file: BinaryIO, file_description: str, size: int, output_path: str, password: str, chunk_size: int = 64*1024) -> str:
-    file_description = file_description.encode('utf-8')
+
+def encrypt_file(
+    file: BinaryIO,
+    file_description: str,
+    size: int,
+    output_path: str,
+    password: str,
+    chunk_size: int = 64 * 1024,
+) -> str:
+    file_description = file_description.encode("utf-8")
     description_size = bytes([len(file_description)])
     salt = get_random_bytes(SALT_SIZE)
     nonce = get_random_bytes(NONCE_SIZE)
@@ -18,7 +26,7 @@ def encrypt_file(file: BinaryIO, file_description: str, size: int, output_path: 
     cipher = AES.new(key, AES.MODE_GCM, nonce=nonce)
     processed = 0
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(output_path, 'wb') as fout:
+    with open(output_path, "wb") as fout:
         fout.write(salt)
         fout.write(nonce)
         fout.write(description_size)
@@ -34,8 +42,9 @@ def encrypt_file(file: BinaryIO, file_description: str, size: int, output_path: 
         fout.write(tag)
     return output_path
 
-def decrypt_file(file_path: str, password: str, chunk_size=64*1024):
-    with tempfile.TemporaryFile(mode='w+b') as tmp, open(file_path, 'rb') as f:
+
+def decrypt_file(file_path: str, password: str, chunk_size=64 * 1024):
+    with tempfile.TemporaryFile(mode="w+b") as tmp, open(file_path, "rb") as f:
         salt = f.read(SALT_SIZE)
         nonce = f.read(NONCE_SIZE)
         description_size = int.from_bytes(f.read(1))
@@ -47,7 +56,7 @@ def decrypt_file(file_path: str, password: str, chunk_size=64*1024):
         f.seek(SALT_SIZE + NONCE_SIZE + 1 + description_size)
         encrypted_size = file_size - SALT_SIZE - NONCE_SIZE - 1 - description_size - 16
         remaining = encrypted_size
-        while remaining > 0 :
+        while remaining > 0:
             chunk = f.read(min(chunk_size, remaining))
             tmp.write(cipher.decrypt(chunk))
             remaining -= len(chunk)

@@ -1,8 +1,7 @@
+import json
 from typing import Annotated, Type
 
-import json
-
-from fastapi import APIRouter, Depends, Form, File, UploadFile
+from fastapi import APIRouter, Depends, File, Form, UploadFile
 from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse, StreamingResponse
 from sqlalchemy.exc import MultipleResultsFound, NoResultFound
@@ -16,20 +15,20 @@ from token_.service.base_service import BaseTokenService
 from user.dependency.service import get_user_service
 from user.service.base_service import BaseUserService
 
-router = APIRouter(prefix='/file', tags=['file'])
+router = APIRouter(prefix="/file", tags=["file"])
 
 
-@router.post('/')
+@router.post("/")
 async def create_file(
-    username: Annotated[str, Form(media_type='application/json')],
-    token: Annotated[str, Form(media_type='application/json')],
-    file_path: Annotated[str, Form(media_type='application/json')],
-    file_description: Annotated[str, Form(media_type='application/json')],
+    username: Annotated[str, Form(media_type="application/json")],
+    token: Annotated[str, Form(media_type="application/json")],
+    file_path: Annotated[str, Form(media_type="application/json")],
+    file_description: Annotated[str, Form(media_type="application/json")],
     file_upload: Annotated[UploadFile, File()],
     session: Session = Depends(get_db_session),
     file_service_cls: Type[BaseFileService] = Depends(get_file_service),
     token_service_cls: Type[BaseTokenService] = Depends(get_token_service),
-    user_service_cls: Type[BaseUserService] = Depends(get_user_service)
+    user_service_cls: Type[BaseUserService] = Depends(get_user_service),
 ):
     file_service = file_service_cls(session)
     token_service = token_service_cls(session)
@@ -40,16 +39,18 @@ async def create_file(
         if not user:
             raise Exception
         user_id = user.user_id
-        file_service.create_file(username, user_id, file_path, file_description, file_upload)
+        file_service.create_file(
+            username, user_id, file_path, file_description, file_upload
+        )
     except (MultipleResultsFound, NoResultFound):
         raise HTTPException(401)
     except ValueError as e:
         raise HTTPException(400, detail=e.args)
 
-    return JSONResponse(content={'detail': 'File Created'}, status_code=201)
+    return JSONResponse(content={"detail": "File Created"}, status_code=201)
 
 
-@router.get('/')
+@router.get("/")
 async def read_file(
     username: str,
     token: str,
@@ -57,7 +58,7 @@ async def read_file(
     session: Session = Depends(get_db_session),
     file_service_cls: Type[BaseFileService] = Depends(get_file_service),
     token_service_cls: Type[BaseTokenService] = Depends(get_token_service),
-    user_service_cls: Type[BaseUserService] = Depends(get_user_service)
+    user_service_cls: Type[BaseUserService] = Depends(get_user_service),
 ):
     file_service = file_service_cls(session)
     token_service = token_service_cls(session)
@@ -68,22 +69,25 @@ async def read_file(
         if not user:
             raise Exception
         user_id = user.user_id
-        filename, file_description, decrypt = file_service.read_file(username, user_id, file_full_path)
-        headers = {'X-Meta-Info': json.dumps({'file_description': file_description}),
-                   'Content-Disposition': f'attachment; filename="{filename}"'}
+        filename, file_description, decrypt = file_service.read_file(
+            username, user_id, file_full_path
+        )
+        headers = {
+            "X-Meta-Info": json.dumps({"file_description": file_description}),
+            "Content-Disposition": f'attachment; filename="{filename}"',
+        }
         return StreamingResponse(
-            decrypt,
-            media_type='application/octet-stream',
-            headers=headers
+            decrypt, media_type="application/octet-stream", headers=headers
         )
     except ValueError as e:
         raise HTTPException(401, e.args)
 
-@router.put('/')
+
+@router.put("/")
 async def update_file(file_upload: UploadFile):
     pass
 
 
-@router.delete('/')
+@router.delete("/")
 async def delete_file():
     pass

@@ -11,19 +11,27 @@ class BaseTokenRepository(ABC):
         pass
 
     @abstractmethod
-    def get_by_user_id(self, user_id: int, token_is_active: int = 1) -> Optional[List[Token]]:
+    def get_by_user_id(
+        self, user_id: int, token_is_active: int = 1
+    ) -> Optional[List[Token]]:
         pass
 
     @abstractmethod
-    def get_tokens(self, user_username: str, token_is_active: int = 1) -> Optional[List[Token]]:
+    def get_tokens(
+        self, user_username: str, token_is_active: int = 1
+    ) -> Optional[List[Token]]:
         pass
 
     @abstractmethod
-    def create_token(self, user_username: str, token_value: str, token_expiration_date: datetime):
+    def create_token(
+        self, user_username: str, token_value: str, token_expiration_date: datetime
+    ):
         pass
 
     @abstractmethod
-    def get_token_by_username_and_value(self, user_username: str, token_value: str, token_is_active: int = 1) -> Optional[Token]:
+    def get_token_by_username_and_value(
+        self, user_username: str, token_value: str, token_is_active: int = 1
+    ) -> Optional[Token]:
         pass
 
     @abstractmethod

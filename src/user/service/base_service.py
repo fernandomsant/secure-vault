@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
+from typing import Optional
 
 from sqlalchemy.orm import Session
 
-from typing import Optional
 from db.model import User
+
 
 class BaseUserService(ABC):
 

@@ -9,10 +9,10 @@ from user.dependency.service import get_user_service
 from user.schema import CreateUser
 from user.service.base_service import BaseUserService
 
-router = APIRouter(prefix='/user', tags=['user'])
+router = APIRouter(prefix="/user", tags=["user"])
 
 
-@router.post('/')
+@router.post("/")
 async def create_user(
     create_user: CreateUser,
     session: Session = Depends(get_db_session),
@@ -26,19 +26,19 @@ async def create_user(
         user_service.create_user(full_name, username, password)
     except ValueError as e:
         raise HTTPException(400, detail=e.args)
-    return JSONResponse({'detail': 'User Created'}, 201)
+    return JSONResponse({"detail": "User Created"}, 201)
 
 
-@router.get('/')
+@router.get("/")
 async def read_user():
     pass
 
 
-@router.put('/')
+@router.put("/")
 async def update_user():
     pass
 
 
-@router.delete('/')
+@router.delete("/")
 async def delete_user():
     pass

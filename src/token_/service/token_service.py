@@ -1,7 +1,7 @@
-from datetime import datetime, timezone, timedelta
-from sqlalchemy.orm import Session
-
+from datetime import datetime, timedelta, timezone
 from typing import List
+
+from sqlalchemy.orm import Session
 
 from db.model import Token
 from token_.dependency.repository import get_token_repository
@@ -25,11 +25,13 @@ class TokenService(BaseTokenService):
         if not token_obj:
             return False
         expiration_date = token_obj.token_expiration_date
-        if bool(datetime.now(timezone.utc) > expiration_date.replace(tzinfo=timezone.utc)):
+        if bool(
+            datetime.now(timezone.utc) > expiration_date.replace(tzinfo=timezone.utc)
+        ):
             self._repository.deactivate_token(username, token)
             return False
         return True
-    
+
     def delete_token(self, username: str, token: str) -> bool:
         self._repository.deactivate_token(username, token)
         return True
